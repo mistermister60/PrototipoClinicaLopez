@@ -63,10 +63,10 @@ const VistaInicio = {
             </div>
             
             <div class="flex flex-col gap-3 w-full sm:w-auto z-10">
-              <button class="bg-clinica-navy hover:bg-[#022f5c] text-white px-8 py-4 rounded-xl font-bold shadow-[0_6px_20px_rgba(1,59,120,0.25)] transition-all flex items-center justify-center gap-2 hover:-translate-y-0.5">
+              <button id="btn-iniciar-consulta" class="bg-clinica-navy hover:bg-[#022f5c] text-white px-8 py-4 rounded-xl font-bold shadow-[0_6px_20px_rgba(1,59,120,0.25)] transition-all flex items-center justify-center gap-2 hover:-translate-y-0.5">
                 <i class="fa-solid fa-stethoscope"></i> Iniciar Consulta
               </button>
-              <button class="bg-white hover:bg-slate-50 text-clinica-navy border border-slate-200 px-8 py-3 rounded-xl font-bold transition-all text-sm">
+              <button id="btn-ver-historial" class="bg-white hover:bg-slate-50 text-clinica-navy border border-slate-200 px-8 py-3 rounded-xl font-bold transition-all text-sm">
                 Ver Historial
               </button>
             </div>
@@ -181,6 +181,69 @@ const VistaInicio = {
     document.getElementById('page-subtitle').innerText = 'Panel de Control';
     document.getElementById('page-title').innerText = 'Resumen General';
     updateActiveNav('nav-inicio');
+
+    document.getElementById('btn-iniciar-consulta').addEventListener('click', () => {
+      Swal.fire({
+        title: 'Iniciar Consulta',
+        html: `
+          <div class="text-left font-sans mt-4 space-y-4">
+            <div>
+              <label class="block text-sm font-bold text-slate-700 mb-1">Motivo de la consulta actual</label>
+              <input type="text" class="swal2-input border-slate-200 m-0 w-full" value="Revisión Cardiológica" style="font-family: inherit;">
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-slate-700 mb-1">Notas preliminares (Enfermería)</label>
+              <textarea class="swal2-textarea border-slate-200 m-0 w-full p-3 resize-none" rows="3" style="font-family: inherit;">Presión 120/80. Pulso 75 lpm. Paciente reporta sentirse bien.</textarea>
+            </div>
+            <div class="bg-clinica-cyan/10 p-3 rounded-lg border border-clinica-cyan/20">
+              <p class="text-sm text-clinica-navy font-semibold"><i class="fa-solid fa-circle-info mr-2"></i>Al iniciar, el estado del paciente cambiará a "En Consulta".</p>
+            </div>
+          </div>
+        `,
+        showCancelButton: true,
+        confirmButtonColor: '#2b8243',
+        cancelButtonColor: '#94a3b8',
+        confirmButtonText: '<i class="fa-solid fa-play mr-2"></i> Comenzar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'Consulta Iniciada',
+            text: 'El cronómetro de la consulta ha comenzado.',
+            icon: 'success',
+            confirmButtonColor: '#013b78'
+          });
+        }
+      });
+    });
+
+    document.getElementById('btn-ver-historial').addEventListener('click', () => {
+      Swal.fire({
+        title: 'Historial Clínico - Carlos Mendoza',
+        html: `
+          <div class="text-left font-sans mt-4">
+            <div class="border-l-4 border-clinica-green pl-4 mb-4">
+              <h4 class="font-bold text-clinica-navy">Última visita: 15 de Mayo, 2026</h4>
+              <p class="text-sm text-slate-500">Motivo: Chequeo de presión arterial.</p>
+              <p class="text-sm text-slate-500">Diagnóstico: Presión ligeramente elevada.</p>
+            </div>
+            <div class="border-l-4 border-clinica-cyan pl-4 mb-4">
+              <h4 class="font-bold text-clinica-navy">10 de Enero, 2026</h4>
+              <p class="text-sm text-slate-500">Motivo: Dolor en el pecho.</p>
+              <p class="text-sm text-slate-500">Diagnóstico: Estrés, se recetó descanso y electrocardiograma normal.</p>
+            </div>
+            <div class="border-l-4 border-slate-300 pl-4">
+              <h4 class="font-bold text-slate-700">22 de Agosto, 2025</h4>
+              <p class="text-sm text-slate-500">Motivo: Examen general.</p>
+              <p class="text-sm text-slate-500">Diagnóstico: Paciente sano.</p>
+            </div>
+          </div>
+        `,
+        width: 600,
+        confirmButtonColor: '#013b78',
+        confirmButtonText: 'Cerrar'
+      });
+    });
   }
 };
 
@@ -188,13 +251,26 @@ const VistaPacientes = {
   render: () => `
     <div class="fade-in">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-5 mb-8">
-        <div class="relative w-full sm:w-[28rem]">
-          <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
-          <input type="text" placeholder="Buscar por nombre, ID o teléfono..." class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200/70 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-clinica-cyan/50 focus:border-clinica-cyan shadow-sm transition-all">
+        
+        <div class="flex items-center gap-4 hidden sm:flex">
+          <div class="w-14 h-14 bg-clinica-green/10 text-clinica-green rounded-2xl flex items-center justify-center text-2xl shadow-sm border border-clinica-green/20">
+            <i class="fa-solid fa-users-medical"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-extrabold text-clinica-navy">Base de Pacientes</h2>
+            <p class="text-sm text-slate-500 font-medium">Gestión de historiales clínicos</p>
+          </div>
         </div>
-        <button id="btn-nuevo-paciente" class="bg-white hover:bg-slate-50 text-clinica-navy border border-slate-200 font-bold py-3 px-6 rounded-xl shadow-sm hover:shadow transition-all flex items-center gap-2 w-full sm:w-auto justify-center">
-          <i class="fa-solid fa-user-plus text-clinica-green"></i> Nuevo Expediente
-        </button>
+
+        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <div class="relative w-full sm:w-[22rem]">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+            <input type="text" placeholder="Buscar por nombre, ID o teléfono..." class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200/70 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-clinica-cyan/50 focus:border-clinica-cyan shadow-sm transition-all">
+          </div>
+          <button id="btn-nuevo-paciente" class="bg-white hover:bg-slate-50 text-clinica-navy border border-slate-200 font-bold py-3 px-6 rounded-xl shadow-sm hover:shadow transition-all flex items-center gap-2 w-full sm:w-auto justify-center">
+            <i class="fa-solid fa-user-plus text-clinica-green"></i> Nuevo
+          </button>
+        </div>
       </div>
 
       <div class="bg-white rounded-2xl shadow-card border border-slate-100 overflow-hidden">
@@ -230,7 +306,9 @@ const VistaPacientes = {
                     </span>
                   </td>
                   <td class="px-8 py-5 text-right">
-                    <button class="text-clinica-cyan hover:text-clinica-navy p-2 transition-colors"><i class="fa-solid fa-folder-open text-lg"></i></button>
+                    <button class="btn-ver-expediente text-clinica-cyan hover:text-clinica-navy p-2 transition-colors" data-id="${p.id}" data-nombre="${p.nombre}">
+                      <i class="fa-solid fa-folder-open text-lg"></i>
+                    </button>
                   </td>
                 </tr>
               `).join('')}
@@ -261,6 +339,40 @@ const VistaPacientes = {
         if (result.isConfirmed) {
           Swal.fire({ title: 'Registrado', text: 'El expediente ha sido creado.', icon: 'success', confirmButtonColor: '#2b8243' });
         }
+      });
+    });
+
+    document.querySelectorAll('.btn-ver-expediente').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.currentTarget.dataset.id;
+        const nombre = e.currentTarget.dataset.nombre;
+        Swal.fire({
+          title: `Expediente Médico`,
+          html: `
+            <div class="text-left font-sans mt-2 space-y-4">
+              <div class="flex gap-4 items-center p-4 bg-slate-50 rounded-xl border border-slate-100">
+                 <div class="w-12 h-12 rounded-full bg-clinica-navy text-white flex items-center justify-center text-xl font-bold shrink-0">
+                   ${nombre.charAt(0)}
+                 </div>
+                 <div>
+                   <p class="font-bold text-slate-800 text-lg">${nombre}</p>
+                   <p class="text-sm text-slate-500">ID: #${id} | Seguro: Activo</p>
+                 </div>
+              </div>
+              <div>
+                <h4 class="font-bold text-clinica-navy text-sm uppercase tracking-wider mb-2">Historial Médico Resumido</h4>
+                <ul class="text-sm text-slate-600 space-y-2">
+                  <li class="flex gap-2"><i class="fa-solid fa-check text-clinica-green mt-0.5"></i> Sin alergias conocidas.</li>
+                  <li class="flex gap-2"><i class="fa-solid fa-check text-clinica-green mt-0.5"></i> Esquema de vacunación completo.</li>
+                  <li class="flex gap-2"><i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i> Observación de presión arterial en la última visita.</li>
+                </ul>
+              </div>
+            </div>
+          `,
+          width: 500,
+          confirmButtonColor: '#013b78',
+          confirmButtonText: 'Cerrar'
+        });
       });
     });
   }
