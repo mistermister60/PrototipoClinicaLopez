@@ -254,7 +254,7 @@ const VistaPacientes = {
         
         <div class="flex items-center gap-4 hidden sm:flex">
           <div class="w-14 h-14 bg-clinica-green/10 text-clinica-green rounded-2xl flex items-center justify-center text-2xl shadow-sm border border-clinica-green/20">
-            <i class="fa-solid fa-users-medical"></i>
+            <i class="fa-solid fa-folder-open"></i>
           </div>
           <div>
             <h2 class="text-2xl font-extrabold text-clinica-navy">Base de Pacientes</h2>
